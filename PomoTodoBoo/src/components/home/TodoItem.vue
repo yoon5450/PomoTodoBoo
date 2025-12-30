@@ -18,17 +18,19 @@ const deleteTodo = (id: number) => {
 
 <template>
   <li class="todo-item">
-    <input
-      type="checkbox"
-      :checked="data.todo.completed"
-      @change="emit('updateTodo', data.todo.id)"
-    />
-    <button type="button" className="roundBtn">
-      <Play :color="'#111111'" :size="32" />
-    </button>
-    <span :class="{ 'line-through': data.todo.completed }">
-      {{ data.todo.title }}
-    </span>
+    <div class="todo-content-container">
+      <input
+        type="checkbox"
+        :checked="data.todo.completed"
+        @change="emit('updateTodo', data.todo.id)"
+      />
+      <button type="button" className="roundBtn">
+        <Play :color="'#111111'" :size="32" />
+      </button>
+      <span :class="{ 'line-through': data.todo.completed }">
+        {{ data.todo.title }}
+      </span>
+    </div>
     <button @click="deleteTodo(data.todo.id)" class="deleteBtn">
       <Trash2 :color="'white'" :size="32" />
     </button>
@@ -40,6 +42,12 @@ const deleteTodo = (id: number) => {
   text-decoration: line-through;
 }
 
+.todo-content-container {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
 .todo-item {
   display: flex;
   justify-content: space-between;
@@ -47,6 +55,7 @@ const deleteTodo = (id: number) => {
   gap: 1rem;
   background-color: rgb(243, 243, 243);
   padding: 0.5rem 1rem;
+  border-radius: 8px;
 }
 
 .deleteBtn {

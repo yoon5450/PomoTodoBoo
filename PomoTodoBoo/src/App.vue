@@ -23,9 +23,11 @@ import MainHeader from './components/layout/MainHeader.vue'
 }
 
 .app-content {
-  padding-top: var(--header-height);
-  padding-left: 16px;
-  padding-right: 16px;
+  width: 100%;
+  max-height: calc(100vh - var(--header-height) - 20px);
+  margin-top: calc(var(--header-height) + 20px);
+  padding-left: 0;
+  padding-right: 0;
   padding-bottom: 16px;
   min-height: calc(100vh - var(--header-height));
   box-sizing: border-box;
