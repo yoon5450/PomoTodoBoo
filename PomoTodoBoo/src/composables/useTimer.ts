@@ -1,41 +1,48 @@
-import { nextTick, ref, watch, onMounted, onUnmounted, type Ref } from 'vue'
+import { nextTick, ref, watch, onMounted, onUnmounted, computed } from 'vue'
 
 export function useEventListener(target: EventTarget, event: string, callback: () => void) {
   onMounted(() => target.addEventListener(event, callback))
   onUnmounted(() => target.removeEventListener(event, callback))
 }
 
-export function useTimer(initSecond: number, toggle: Ref) {
+export function useTimer(initSecond: number) {
   const second = ref(initSecond)
   let beforeBackground: number | null = null
-  let timerId: number | null = null
+  const timerId = ref<number | null>(null)
 
-  const setTimer = () => {
-    if (!timerId)
-      timerId = setInterval(() => {
+  const startTimer = () => {
+    if (!timerId.value)
+      timerId.value = setInterval(() => {
         second.value -= 1
       }, 1000)
   }
 
-  setTimer()
+  const pauseTimer = () => {
+    clearInterval(timerId.value ?? 0)
+    timerId.value = null
+  }
 
-  watch(toggle, () => {
+  const resetTimer = () => {
+    pauseTimer()
     second.value = initSecond
-  })
+  }
+
+  startTimer()
 
   watch(second, (newValue) => {
     if (newValue <= 0) {
-      clearInterval(timerId ?? 0)
-      timerId = null
+      pauseTimer()
     }
   })
+
+  const isActive = computed(() => (timerId.value ? true : false))
 
   useEventListener(window, 'visibilitychange', async () => {
     if (second.value <= 0) return
 
     if (document.visibilityState === 'hidden') {
-      clearInterval(timerId ?? 0)
-      timerId = null
+      clearInterval(timerId.value ?? 0)
+      timerId.value = null
       beforeBackground = new Date().getTime()
     } else {
       const interval = (new Date().getTime() - (beforeBackground ?? 0)) * 0.001
@@ -43,11 +50,12 @@ export function useTimer(initSecond: number, toggle: Ref) {
         second.value = 0
         return
       }
-      second.value = interval >= second.value ? 0 : second.value - interval
+      second.value = interval >= second.value ? 0 : second.value - Math.floor(interval)
       // DOM 업데이트 발생시
       await nextTick()
-      setTimer()
+      startTimer()
     }
   })
-  return { second }
+
+  return { second, startTimer, pauseTimer, resetTimer, isActive }
 }

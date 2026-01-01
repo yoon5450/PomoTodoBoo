@@ -3,11 +3,14 @@ import { computed, ref } from 'vue'
 import TodoItem from './TodoItem.vue'
 import TodoInput from './TodoInput.vue'
 import type { Todo } from '@/types'
+import { useRouter } from 'vue-router'
 
 // at date를 변환 string으로 사용해도 되는가?
 // 서버를 추가할 거고. 완료 데이터 원천은 서버에 있다. 어차피 받을 때 변환하면 되고, -> 아닌가? 컴포넌트에서 보여줄 때마다 변환?
 // 원천 정합성 정확도는 createAt으로 저장될거니까. 오차는 아마 10s 이내.
 // 완료 여부는 RPC로 해당 아이템 하나 찾아서 완료 처리하도록 변경하면 되고...
+
+const route = useRouter()
 
 const todos = ref<Todo[]>([
   { id: 1, title: 'Todo 1', completed: false, createAt: Date.now(), completeAt: 0 },
@@ -22,6 +25,10 @@ const completeTodo = (id: number) => {
   todos.value = todos.value.map((todo) =>
     todo.id === id ? { ...todo, completed: !todo.completed } : todo,
   )
+}
+
+const startPomo = (id: number) => {
+  route.push({ query: { id, pomodoro: 'true' } })
 }
 
 const completed = computed(() => {
@@ -55,6 +62,7 @@ const addTodo = (title: string) => {
         :todo="todo"
         @deleteTodo="deleteTodo"
         @updateTodo="completeTodo"
+        @startPomo="startPomo"
       />
       <div class="empty-todo" v-if="unCompleted.length === 0">모든 작업을 마쳤습니다.</div>
     </ul>

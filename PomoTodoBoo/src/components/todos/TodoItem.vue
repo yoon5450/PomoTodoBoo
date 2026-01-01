@@ -5,10 +5,14 @@ import { Play, Trash2 } from 'lucide-vue-next'
 
 const data = defineProps<{ todo: Todo }>()
 
-const emit = defineEmits(['deleteTodo', 'updateTodo'])
+const emit = defineEmits(['deleteTodo', 'updateTodo', 'startPomo'])
 
 const deleteTodo = (id: number) => {
   emit('deleteTodo', id)
+}
+
+const startPomo = (id: number) => {
+  emit('startPomo', id)
 }
 </script>
 
@@ -20,7 +24,7 @@ const deleteTodo = (id: number) => {
         :checked="data.todo.completed"
         @change="emit('updateTodo', data.todo.id)"
       />
-      <button type="button" className="roundBtn">
+      <button type="button" className="roundBtn" @click="startPomo(data.todo.id)">
         <Play :color="'#111111'" :size="32" />
       </button>
       <span :class="{ 'line-through': data.todo.completed }">
