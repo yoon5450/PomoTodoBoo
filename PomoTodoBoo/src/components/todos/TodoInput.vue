@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-import TextInput from './TextInput.vue'
+import TextInput from '../shared/TextInput.vue'
 import { Plus } from 'lucide-vue-next'
 
 const emit = defineEmits(['addTodo'])

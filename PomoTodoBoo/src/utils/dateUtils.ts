@@ -3,16 +3,18 @@ export const getToday = () => {
   return transferDate(date)
 }
 
-export function transferDate(date: Date) {
+export function transferDate(date: number | Date) {
+  const origin = new Date(date)
+
   return (
-    date.getFullYear() +
+    origin.getFullYear() +
     '년 ' +
-    (date.getMonth() + 1) +
+    (origin.getMonth() + 1) +
     '월 ' +
-    date.getDay() +
+    origin.getDay() +
     '일 ' +
-    date.getHours() +
+    origin.getHours() +
     ':' +
-    date.getMonth()
+    origin.getMinutes().toString().padStart(2, '0')
   )
 }

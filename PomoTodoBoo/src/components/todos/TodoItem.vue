@@ -1,11 +1,7 @@
 <script setup lang="ts">
+import type { Todo } from '@/types'
+import { transferDate } from '@/utils/dateUtils'
 import { Play, Trash2 } from 'lucide-vue-next'
-
-interface Todo {
-  id: number
-  title: string
-  completed: boolean
-}
 
 const data = defineProps<{ todo: Todo }>()
 
@@ -18,7 +14,7 @@ const deleteTodo = (id: number) => {
 
 <template>
   <li class="todo-item">
-    <div class="todo-content-container">
+    <div class="todo-content-divider">
       <input
         type="checkbox"
         :checked="data.todo.completed"
@@ -31,9 +27,12 @@ const deleteTodo = (id: number) => {
         {{ data.todo.title }}
       </span>
     </div>
-    <button @click="deleteTodo(data.todo.id)" class="deleteBtn">
-      <Trash2 :color="'white'" :size="32" />
-    </button>
+    <div class="todo-content-divider">
+      <div class="date-info">{{ transferDate(data.todo.createAt) }}</div>
+      <button @click="deleteTodo(data.todo.id)" class="deleteBtn">
+        <Trash2 :color="'white'" :size="32" />
+      </button>
+    </div>
   </li>
 </template>
 
@@ -42,7 +41,7 @@ const deleteTodo = (id: number) => {
   text-decoration: line-through;
 }
 
-.todo-content-container {
+.todo-content-divider {
   display: flex;
   gap: 8px;
   align-items: center;
@@ -56,6 +55,11 @@ const deleteTodo = (id: number) => {
   background-color: rgb(243, 243, 243);
   padding: 0.5rem 1rem;
   border-radius: 8px;
+}
+
+.date-info {
+  font-size: 14px;
+  color: #555555;
 }
 
 .deleteBtn {
